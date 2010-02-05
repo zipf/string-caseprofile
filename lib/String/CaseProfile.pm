@@ -652,9 +652,9 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     use Encode;
     
     my @strings = (
-                    'Entorno de tiempo de ejecución',
-                    'è un linguaggio veloce',
-                    'langages dérivés du C',
+                    'Entorno de tiempo de ejecuciÃ³n',
+                    'Ã¨ un linguaggio veloce',
+                    'langages dÃ©rivÃ©s du C',
                   );
 
 
@@ -680,10 +680,10 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     my $ref_string2 = 'Another reference string';
 
     $new_string = set_profile( $samples[1], get_profile($ref_string1) );
-    # The current value of $new_string is 'È UN LINGUAGGIO VELOCE'
+    # The current value of $new_string is 'Ãˆ UN LINGUAGGIO VELOCE'
 
     $new_string = set_profile( $samples[1], get_profile($ref_string2) );
-    # Now it's 'È un linguaggio veloce'
+    # Now it's 'Ãˆ un linguaggio veloce'
     
     # Alternative, using copy_profile
     $new_string = copy_profile( from => $ref_string1, to => $samples[1] );
@@ -695,11 +695,11 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
 
     my %profile1 = ( string_type  => 'all_uc' );
     $new_string = set_profile( $samples[2], %profile1 );
-    # $new_string is 'LANGAGES DÉRIVÉS DU C'
+    # $new_string is 'LANGAGES DÃ‰RIVÃ‰S DU C'
     
     my %profile2 = ( string_type => 'all_lc', force_change => 1 );
     $new_string = set_profile( $samples[2], %profile2 );
-    # $new_string is 'langages dérivés du c'
+    # $new_string is 'langages dÃ©rivÃ©s du c'
     
     my %profile3 = (
                     custom  => {
@@ -708,11 +708,11 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
                                }
                    );
     $new_string = set_profile( $samples[2], %profile3 );
-    # $new_string is 'langages DÉRIVÉS du C'
+    # $new_string is 'langages DÃ‰RIVÃ‰S du C'
 
     my %profile4 = ( custom => { all_lc => '1st_uc' } );
     $new_string = set_profile( $samples[2], %profile4 );
-    # $new_string is 'Langages Dérivés Du C'
+    # $new_string is 'Langages DÃ©rivÃ©s Du C'
 
 
 
@@ -721,7 +721,7 @@ More examples, this time excluding words:
     
     # A second batch of sample strings
     @strings = (
-                'conexión a Internet',
+                'conexiÃ³n a Internet',
                 'An Internet-based application',
                 'THE ABS MODULE',
                 'Yes, I think so',
@@ -757,7 +757,7 @@ More examples, this time excluding words:
     %profile = ( string_type => 'all_uc', exclude => ['Internet'] );
     $new_string = set_profile($samples[0], %profile);
     
-    print "$new_string\n";   # prints 'CONEXIÓN A INTERNET', as expected, since
+    print "$new_string\n";   # prints 'CONEXIÃ“N A INTERNET', as expected, since
                              # the case profile of a excluded word is not preserved
                              # if the target string type is 'all_uc'
 
