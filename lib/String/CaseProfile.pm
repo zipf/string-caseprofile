@@ -519,20 +519,38 @@ string containing several alternate types in string context.)
 
 =head1 FUNCTIONS
 
+
+B<WARNING:> The syntax of the B<get_profile> function changed slightly in v0.16.
+The old syntax (see L<http://search.cpan.org/~enell/String-CaseProfile-0.15/lib/String/CaseProfile.pm>)
+still works, but eventually it will be deprecated. 
+
+
 =over 4
 
 =item C<get_profile( $string, { exclude =E<gt> $excluded, strict =E<gt> $strict } )>
 
-Returns a hash containing the profile details for $string. The string provided
-must be encoded as B<utf8>.
+Returns a hash containing the profile details for $string.
 
-B<exclude> is an optional parameter containing a reference to a list of terms that
-should not be considered when determining the profile of $string (e.g., the word
-"Internet" in some cases, or the first person personal pronoun in English, "I").
+The string provided must be encoded as B<utf8>. This is the only required parameter.
 
-B<strict> is an optional parameter that you can set to to a true value if you
-want to consider 'Other'-type words when determining the string type.
+You can also specify a hash reference containing any of the following optional
+parameters:
+
+=over4
+
+=item * C<exclude>
+
+A reference to a list of terms that should not be considered when determining
+the profile of $string (e.g., the word "Internet" in some cases, or
+the first person personal pronoun in English, "I").
+
+=item * C<strict>
+
+A parameter that you can set to to a true value if you want to consider
+'Other'-type words when determining the string type.
 By default, this parameter is set to false.
+
+=back
 
 The keys of the returned hash are the following:
 
@@ -581,7 +599,7 @@ Returns a string containing a summary of the string profile.
 
 =over 4
 
-=item C<set_profile($string, %profile)>
+=item C<set_profile( $string, %profile )>
 
 Applies %profile to $string and returns a new string. $string must be encoded
 as B<utf8>. The profile configuration parameters (hash keys) are the following:
@@ -704,10 +722,12 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     # EXAMPLE 3: Change a string using several custom profiles
 
     my %profile1 = ( string_type  => 'all_uc' );
+    
     $new_string = set_profile( $samples[2], %profile1 );
     # $new_string is 'LANGAGES DÉRIVÉS DU C'
     
     my %profile2 = ( string_type => 'all_lc', force_change => 1 );
+    
     $new_string = set_profile( $samples[2], %profile2 );
     # $new_string is 'langages dérivés du c'
     
@@ -717,10 +737,12 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
                                 index   => { '1'  => 'all_uc' }, # 2nd word
                                }
                    );
+    
     $new_string = set_profile( $samples[2], %profile3 );
     # $new_string is 'langages DÉRIVÉS du C'
 
     my %profile4 = ( custom => { all_lc => '1st_uc' } );
+    
     $new_string = set_profile( $samples[2], %profile4 );
     # $new_string is 'Langages Dérivés Du C'
 
@@ -754,6 +776,7 @@ More examples, this time excluding words:
 
     # Set this profile to $samples[1], excluding the word 'Internet'
     $profile{exclude} = ['Internet'];
+    
     $new_string = set_profile($samples[1], %profile);
 
     print "$new_string\n"; # prints "an Internet-based application", preserving
@@ -765,6 +788,7 @@ More examples, this time excluding words:
     #            to 'all_uc'
 
     %profile = ( string_type => 'all_uc', exclude => ['Internet'] );
+    
     $new_string = set_profile($samples[0], %profile);
     
     print "$new_string\n";   # prints 'CONEXIÓN A INTERNET', as expected, since
@@ -777,6 +801,7 @@ More examples, this time excluding words:
     #            excluded word to 'all_lc'
     
     %profile = ( string_type => 'all_lc', exclude => ['ABS'] );
+    
     $new_string = set_profile($samples[2], %profile);
 
     print "$new_string\n";   # prints 'the ABS module', preserving the 
@@ -846,12 +871,51 @@ Many thanks to Xavier Noria for wise suggestions.
 
 Enrique Nell, E<lt>blas.gordon@gmail.comE<gt>
 
+
+=head1 BUGS
+
+Please report any bugs or feature requests to C<bug-string-caseprofile at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=String-CaseProfile>.  I will be notified, and then you'll
+automatically be notified of progress on your bug as I make changes.
+
+
+=head1 SUPPORT
+
+You can find documentation for this module with the perldoc command.
+
+    perldoc String::CaseProfile
+
+
+You can also look for information at:
+
+=over 4
+
+=item * RT: CPAN's request tracker
+
+L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=String-CaseProfile>
+
+=item * AnnoCPAN: Annotated CPAN documentation
+
+L<http://annocpan.org/dist/String-CaseProfile>
+
+=item * CPAN Ratings
+
+L<http://cpanratings.perl.org/d/String-CaseProfile>
+
+=item * Search CPAN
+
+L<http://search.cpan.org/dist/String-CaseProfile/>
+
+=back
+
+
 =head1 COPYRIGHT AND LICENSE
 
 Copyright (C) 2007-2010 by Enrique Nell, all rights reserved.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This program is free software; you can redistribute it and/or modify it
+under the terms of either: the GNU General Public License as published
+by the Free Software Foundation; or the Artistic License.
 
 
 =cut

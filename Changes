@@ -3,7 +3,7 @@ Revision history for String::CaseProfile
 0.16  February 7, 2010
 
     * Changed slightly the interface of the get_profile function to add
-      a new option, strict, used to consider unknown words (ignored by default)
+      a new option, strict, used to consider words of unknown type (ignored by default)
       when determining the string type.
       The old interface still works.
     * Improved the word regex to detect things like AT&T as "single-words".
@@ -12,6 +12,8 @@ Revision history for String::CaseProfile
     * Updated the documentation.
     * Added some tests.
     * Changed the contact e-mail address.
+    * Added the BUGS and SUPPORT boilerplate sections.
+    * Updated the license text.
 
 0.15  February 27, 2009
 
