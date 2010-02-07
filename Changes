@@ -1,15 +1,17 @@
-Revision history for Perl extension String::CaseProfile
+Revision history for String::CaseProfile
 
-0.16  September 3, 2009
+0.16  February 7, 2010
 
-    * Changed the interface from positional to hash reference.
+    * Changed slightly the interface of the get_profile function to add
+      a new option, strict, used to consider unknown words (ignored by default)
+      when determining the string type.
       The old interface still works.
-    * Added the possibility of ........
     * Improved the word regex to detect things like AT&T as "single-words".
     * Changed the scope of $word_re and %types from package variables to
       global variables.
     * Updated the documentation.
-    * Added tests for the new interface.
+    * Added some tests.
+    * Changed the contact e-mail address.
 
 0.15  February 27, 2009
 
