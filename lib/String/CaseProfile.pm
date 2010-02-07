@@ -170,7 +170,7 @@ sub set_profile {
         } elsif ($ref_string_type eq 'other') {
             return $string;
         } else {
-            carp "\nIllegal value of string_type";
+            carp "Illegal value of string_type";
         }
     }
     
@@ -228,7 +228,7 @@ sub set_profile {
             if ($types{$type} && $types{$type} ne 'other') {
                 $default_type = $type;
             } else {
-                carp "\nIllegal default value in custom profile";
+                carp "Illegal default value in custom profile";
             }
         }
         
@@ -309,9 +309,13 @@ sub copy_profile {
     
     if ( $from && $to ) {
         
-        if ( $exclude ) {
+        if ( $exclude || $strict ) {
             
-            my %ref_profile = get_profile( $from, {exclude => $exclude, } );
+            my %ref_profile = get_profile( $from, {
+                                                   exclude => $exclude,
+                                                   strict => $strict
+                                                  }
+                                         );
             
             $ref_profile{exclude} = $exclude;
             
@@ -536,7 +540,7 @@ The string provided must be encoded as B<utf8>. This is the only required parame
 You can also specify a hash reference containing any of the following optional
 parameters:
 
-=over4
+=over 4
 
 =item * C<exclude>
 
@@ -694,7 +698,7 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
 
     # EXAMPLE 1: Get the profile of a string
     
-    my %profile = get_profile($samples[0]);
+    my %profile = get_profile( $samples[0] );
 
     print "$profile{string_type}\n";   # prints '1st_uc'
     my @types = $profile{string_type}; # 1st_uc all_lc all_lc all_lc all_lc
@@ -707,10 +711,10 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     my $ref_string1 = 'REFERENCE STRING';
     my $ref_string2 = 'Another reference string';
 
-    $new_string = set_profile( $samples[1], get_profile($ref_string1) );
+    $new_string = set_profile( $samples[1], get_profile( $ref_string1 ) );
     # The current value of $new_string is 'È UN LINGUAGGIO DINAMICO'
 
-    $new_string = set_profile( $samples[1], get_profile($ref_string2) );
+    $new_string = set_profile( $samples[1], get_profile( $ref_string2 ) );
     # Now it's 'È un linguaggio dinamico'
     
     # Alternative, using copy_profile
@@ -768,7 +772,7 @@ More examples, this time excluding words:
     # EXAMPLE 4: Get the profile of a string excluding the word 'Internet'
     #            and apply it to another string
 
-    my %profile = get_profile($samples[0], ['Internet']);
+    my %profile = get_profile( $samples[0], { exclude => ['Internet'], } );
 
     print "$profile{string_type}\n";      # prints  'all_lc'
     print "$profile{words}[2]->{word}\n"; # prints 'Internet'
@@ -777,7 +781,7 @@ More examples, this time excluding words:
     # Set this profile to $samples[1], excluding the word 'Internet'
     $profile{exclude} = ['Internet'];
     
-    $new_string = set_profile($samples[1], %profile);
+    $new_string = set_profile( $samples[1], %profile );
 
     print "$new_string\n"; # prints "an Internet-based application", preserving
                            # the case of the 'Internet-based' compound word
@@ -789,7 +793,7 @@ More examples, this time excluding words:
 
     %profile = ( string_type => 'all_uc', exclude => ['Internet'] );
     
-    $new_string = set_profile($samples[0], %profile);
+    $new_string = set_profile( $samples[0], %profile );
     
     print "$new_string\n";   # prints 'CONEXIÓN A INTERNET', as expected, since
                              # the case profile of a excluded word is not preserved
@@ -802,7 +806,7 @@ More examples, this time excluding words:
     
     %profile = ( string_type => 'all_lc', exclude => ['ABS'] );
     
-    $new_string = set_profile($samples[2], %profile);
+    $new_string = set_profile( $samples[2], %profile );
 
     print "$new_string\n";   # prints 'the ABS module', preserving the 
                              # excluded word case profile
@@ -813,8 +817,8 @@ More examples, this time excluding words:
     #            using the copy_profile function
 
     $new_string = copy_profile(
-                                from => $samples[3],
-                                to   => $samples[4],
+                                from    => $samples[3],
+                                to      => $samples[4],
                                 exclude => ['I'],
                               );
 
@@ -832,7 +836,7 @@ More examples, this time excluding words:
                     exclude => ['ABS'],
                );
 
-    $new_string = set_profile($samples[2], %profile);
+    $new_string = set_profile( $samples[2], %profile );
     print "$new_string\n";  # prints 'The ABS Module'
 
 

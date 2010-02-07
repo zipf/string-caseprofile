@@ -184,10 +184,13 @@ PERL_ARCHIVE_AFTER =
 
 TO_INST_PM = lib/.DS_Store \
 	lib/String/CaseProfile.pm \
+	lib/String/doc.html \
 	lib/String/pod2htmd.tmp \
 	lib/String/pod2htmi.tmp
 
-PM_TO_BLIB = lib/String/pod2htmi.tmp \
+PM_TO_BLIB = lib/String/doc.html \
+	blib/lib/String/doc.html \
+	lib/String/pod2htmi.tmp \
 	blib/lib/String/pod2htmi.tmp \
 	lib/String/pod2htmd.tmp \
 	blib/lib/String/pod2htmd.tmp \
@@ -485,7 +488,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '--- #YAML:1.0' > META_new.yml
 	$(NOECHO) $(ECHO) 'name:               String-CaseProfile' >> META_new.yml
 	$(NOECHO) $(ECHO) 'version:            0.16' >> META_new.yml
-	$(NOECHO) $(ECHO) 'abstract:           Get/Set the letter case profile of a string' >> META_new.yml
+	$(NOECHO) $(ECHO) 'abstract:           Get/Set the letter case profile of a string' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - Enrique Nell <perl_nell@telefonica.net>' >> META_new.yml
 	$(NOECHO) $(ECHO) 'license:            perl' >> META_new.yml
@@ -794,7 +797,7 @@ testdb_static :: testdb_dynamic
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
 	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="0.16">' > $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '    <ABSTRACT>Get/Set the letter case profile of a string</ABSTRACT>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '    <ABSTRACT>Get/Set the letter case profile of a string</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Enrique Nell &lt;perl_nell@telefonica.net&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i486-linux-gnu-thread-multi-5.10" />' >> $(DISTNAME).ppd
@@ -807,6 +810,7 @@ ppd :
 
 pm_to_blib : $(FIRST_MAKEFILE) $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', q[$(PM_FILTER)], '\''$(PERM_DIR)'\'')' -- \
+	  lib/String/doc.html blib/lib/String/doc.html \
 	  lib/String/pod2htmi.tmp blib/lib/String/pod2htmi.tmp \
 	  lib/String/pod2htmd.tmp blib/lib/String/pod2htmd.tmp \
 	  lib/.DS_Store blib/lib/.DS_Store \

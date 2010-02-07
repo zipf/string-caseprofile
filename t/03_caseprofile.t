@@ -2,7 +2,8 @@
 use strict;
 use warnings;
 
-use Test::More tests => 33;
+use Test::More tests => 35;
+use Test::Warn;
 
 use String::CaseProfile qw(get_profile set_profile copy_profile);
 use Encode;
@@ -95,11 +96,16 @@ is($new_string, 'Langages Dérivés Du C', 'Langages Dérivés Du C');
 
 # Validation tests
 my %bad_profile1 = get_profile(1);
-$new_string = set_profile($samples[0], %bad_profile1);
+#warning_is  {
+               $new_string = set_profile($samples[0], %bad_profile1);
+#            }  "Illegal value of string_type", "Bad string type";
+
 is($new_string, $samples[0], 'Unchanged string');
 
 my %bad_profile2 = ( string_type => 'bad' );
-$new_string = set_profile( $samples[0], %bad_profile2);
+warning_like  {
+               $new_string = set_profile($samples[0], %bad_profile2);
+              }  qr/Illegal value/, "Bad string type";
 is($new_string, $samples[0], 'Unchanged string');
 
 my %bad_profile3 = ( custom => {
@@ -107,7 +113,9 @@ my %bad_profile3 = ( custom => {
                                 default => 'bogus',
                            }
                );
-$new_string = set_profile($samples[0], %bad_profile3);
+warning_like  {
+               $new_string = set_profile($samples[0], %bad_profile3);
+            }  qr/Illegal default value/, "Illegal default value in custom profile";
 is($new_string, $samples[0], 'Unchanged string');
 
 
