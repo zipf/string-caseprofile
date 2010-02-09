@@ -15,7 +15,7 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK ] );
 
-our $VERSION = '0.17';
+our $VERSION = '0.18';
 
 
 my $word_re =  qr{
@@ -418,7 +418,7 @@ String::CaseProfile - Get/Set the letter case profile of a string
 
 =head1 VERSION
 
-Version 0.17 - February 9, 2010
+Version 0.18 - February 9, 2010
 
 =head1 SYNOPSIS
 
@@ -847,21 +847,20 @@ More examples, this time excluding words:
 
 Yet more examples using other alphabets:
 
-    # Samples using other alphabets
-    
+
     use utf8;
     
     binmode STDOUT, ':utf8';
 
-    
+    # Samples using other alphabets
     my @samples = ( 
-                    'Ծրագրի հեղինակների ցանկը', # Armenian
+                    'Ծրագրի հեղինակների ցանկը',              # Armenian
                     'Λίστα των συγγραφέων του προγράμματος', # Greek
-                    'Список авторов программы', # Russian
+                    'Список авторов программы',              # Cyrillic
                   );
     
     my $new_string;
-    
+
     
     # EXAMPLE 9: Get the profile of a string
     
@@ -888,11 +887,11 @@ Yet more examples using other alphabets:
     # EXAMPLE 12: More custom profiles
     
     my %profile1 = (
-                custom  => {
-                            default => 'all_lc',
-                            index   => { '1'  => 'all_uc' }, # 2nd word
-                           }
-                );
+                    custom  => {
+                                default => 'all_lc',
+                                index   => { '1'  => 'all_uc' }, # 2nd word
+                               }
+                   );
                 
     my %profile2 = ( custom => { 'all_lc' => '1st_uc' } );
     

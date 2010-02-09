@@ -1,5 +1,9 @@
 Revision history for String::CaseProfile
 
+0.18  February 9, 2010
+
+    * Reorganized a bit the new doc samples and fixed a layout issue.
+
 0.17  February 9, 2010
 
     * Added Test::Warn to the PREREQ_PM section in Makefile.PL.
