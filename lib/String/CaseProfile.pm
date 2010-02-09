@@ -15,7 +15,7 @@ our @EXPORT_OK = qw(
 
 our %EXPORT_TAGS = ( 'all' => [ @EXPORT_OK ] );
 
-our $VERSION = '0.16';
+our $VERSION = '0.17';
 
 
 my $word_re =  qr{
@@ -410,13 +410,15 @@ sub _transform {
 1;
 __END__
 
+=encoding utf8
+
 =head1 NAME
 
 String::CaseProfile - Get/Set the letter case profile of a string
 
 =head1 VERSION
 
-Version 0.16 - February 7, 2010
+Version 0.17 - February 9, 2010
 
 =head1 SYNOPSIS
 
@@ -474,9 +476,9 @@ Version 0.16 - February 7, 2010
 
 =head1 DESCRIPTION
 
-This module provides a convenient way of handling the letter case conversion of
-sentences/phrases/chunks in machine translation, case-sensitive search and replace,
-and other text processing applications.
+This module provides a convenient way of handling the recasing (letter case
+conversion) of sentences/phrases/chunks in machine translation, case-sensitive
+search and replace, and other text processing applications.
 
 String::CaseProfile includes three functions:
 
@@ -488,7 +490,9 @@ profile determined by get_profile, or you can create your own custom profile.
 B<copy_profile> gets the profile of a string and applies it to another string
 in a single step.
 
-These functions are Unicode-aware and support text in most European languages.
+These functions are Unicode-aware and support text in languages based on alphabets
+which feature lowercase and uppercase letter forms (Roman, Greek, Cyrillic and
+Armenian).
 You must feed them utf8-encoded strings.
 
 B<get_profile> and B<set_profile> use the following identifiers to classify
@@ -524,7 +528,7 @@ string containing several alternate types in string context.)
 =head1 FUNCTIONS
 
 
-B<WARNING:> The syntax of the B<get_profile> function changed slightly in v0.16.
+B<NOTE:> The syntax of the B<get_profile> function changed slightly in v0.16.
 The old syntax (see L<http://search.cpan.org/~enell/String-CaseProfile-0.15/lib/String/CaseProfile.pm>)
 still works, but eventually it will be deprecated. 
 
@@ -684,13 +688,13 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     use Encode;
     
     my @strings = (
-                    'Entorno de tiempo de ejecuci�n',
-                    '� un linguaggio dinamico',
-                    'langages d�riv�s du C',
+                    'Entorno de tiempo de ejecución',
+                    'è un linguaggio dinamico',
+                    'langages dérivés du C',
                   );
 
 
-    # Encode strings as utf-8
+    # Encode strings as utf-8, if necessary
     my @samples = map { decode('iso-8859-1', $_) } @strings;
 
     my $new_string;
@@ -712,10 +716,10 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     my $ref_string2 = 'Another reference string';
 
     $new_string = set_profile( $samples[1], get_profile( $ref_string1 ) );
-    # The current value of $new_string is '� UN LINGUAGGIO DINAMICO'
+    # The current value of $new_string is 'È UN LINGUAGGIO DINAMICO'
 
     $new_string = set_profile( $samples[1], get_profile( $ref_string2 ) );
-    # Now it's '� un linguaggio dinamico'
+    # Now it's 'È un linguaggio dinamico'
     
     # Alternative, using copy_profile
     $new_string = copy_profile( from => $ref_string1, to => $samples[1] );
@@ -728,12 +732,12 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
     my %profile1 = ( string_type  => 'all_uc' );
     
     $new_string = set_profile( $samples[2], %profile1 );
-    # $new_string is 'LANGAGES D�RIV�S DU C'
+    # $new_string is 'LANGAGES DÉRIVÉS DU C'
     
     my %profile2 = ( string_type => 'all_lc', force_change => 1 );
     
     $new_string = set_profile( $samples[2], %profile2 );
-    # $new_string is 'langages d�riv�s du c'
+    # $new_string is 'langages dérivés du c'
     
     my %profile3 = (
                     custom  => {
@@ -743,28 +747,28 @@ its lowercase version, 'mp3', won't be excluded unless you add it to the list).
                    );
     
     $new_string = set_profile( $samples[2], %profile3 );
-    # $new_string is 'langages D�RIV�S du C'
+    # $new_string is 'langages DÉRIVÉS du C'
 
     my %profile4 = ( custom => { all_lc => '1st_uc' } );
     
     $new_string = set_profile( $samples[2], %profile4 );
-    # $new_string is 'Langages D�riv�s Du C'
+    # $new_string is 'Langages Dérivés Du C'
 
 
 
 More examples, this time excluding words:
 
-    
+
     # A second batch of sample strings
     @strings = (
-                'conexi�n a Internet',
+                'conexión a Internet',
                 'An Internet-based application',
                 'THE ABS MODULE',
                 'Yes, I think so',
                 "this is what I'm used to",
                );
                
-    # Encode strings as utf-8
+    # Encode strings as utf-8, if necessary
     my @samples = map { decode('iso-8859-1', $_) } @strings;
 
 
@@ -795,7 +799,7 @@ More examples, this time excluding words:
     
     $new_string = set_profile( $samples[0], %profile );
     
-    print "$new_string\n";   # prints 'CONEXI�N A INTERNET', as expected, since
+    print "$new_string\n";   # prints 'CONEXIÓN A INTERNET', as expected, since
                              # the case profile of a excluded word is not preserved
                              # if the target string type is 'all_uc'
 
@@ -841,6 +845,66 @@ More examples, this time excluding words:
 
 
 
+Yet more examples using other alphabets:
+
+    # Samples using other alphabets
+    
+    use utf8;
+    
+    binmode STDOUT, ':utf8';
+
+    
+    my @samples = ( 
+                    'Ծրագրի հեղինակների ցանկը', # Armenian
+                    'Λίστα των συγγραφέων του προγράμματος', # Greek
+                    'Список авторов программы', # Russian
+                  );
+    
+    my $new_string;
+    
+    
+    # EXAMPLE 9: Get the profile of a string
+    
+    my %profile = get_profile( $samples[0] );
+
+    print "$profile{string_type}\n";   # prints '1st_uc'
+    
+    
+    # EXAMPLE 10: Change a string using a custom profile
+    
+    %profile = ( string_type  => 'all_uc');
+    
+    $new_string = set_profile($samples[0], %profile);
+    
+    print "$new_string\n"; # prints 'ԾՐԱԳՐԻ ՀԵՂԻՆԱԿՆԵՐԻ ՑԱՆԿԸ'
+    
+    
+    # EXAMPLE 11: Get the profile of a string and apply it to another string
+    
+    print set_profile($samples[1], get_profile($new_string)); # prints 'ΛΊΣΤΑ ΤΩΝ ΣΥΓΓΡΑΦΈΩΝ ΤΟΥ ΠΡΟΓΡΆΜΜΑΤΟΣ'
+    print "\n";
+    
+    
+    # EXAMPLE 12: More custom profiles
+    
+    my %profile1 = (
+                custom  => {
+                            default => 'all_lc',
+                            index   => { '1'  => 'all_uc' }, # 2nd word
+                           }
+                );
+                
+    my %profile2 = ( custom => { 'all_lc' => '1st_uc' } );
+    
+    print set_profile($samples[2], %profile1); # prints 'список АВТОРОВ программы'
+    print "\n";
+    
+    print set_profile($samples[2], %profile2); # prints 'Список Авторов Программы'
+    print "\n";
+
+
+
+
 =head1 EXPORT
 
 None by default.
@@ -869,7 +933,7 @@ L<http://en.wikipedia.org/wiki/Capitalization>
 
 =head1 ACKNOWLEDGEMENTS
 
-Many thanks to Xavier Noria for wise suggestions.
+Many thanks to Xavier Noria and Joaquín Ferrero for wise suggestions.
 
 =head1 AUTHOR
 
@@ -921,5 +985,6 @@ This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published
 by the Free Software Foundation; or the Artistic License.
 
+See http://dev.perl.org/licenses/ for more information.
 
 =cut

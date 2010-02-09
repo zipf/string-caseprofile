@@ -16,7 +16,7 @@
 #     BUILD_REQUIRES => {  }
 #     LICENSE => q[perl]
 #     NAME => q[String::CaseProfile]
-#     PREREQ_PM => {  }
+#     PREREQ_PM => { Test::Warn=>q[0.05] }
 #     VERSION_FROM => q[lib/String/CaseProfile.pm]
 
 # --- MakeMaker post_initialize section:
@@ -56,11 +56,11 @@ DIRFILESEP = /
 DFSEP = $(DIRFILESEP)
 NAME = String::CaseProfile
 NAME_SYM = String_CaseProfile
-VERSION = 0.16
+VERSION = 0.17
 VERSION_MACRO = VERSION
-VERSION_SYM = 0_16
+VERSION_SYM = 0_17
 DEFINE_VERSION = -D$(VERSION_MACRO)=\"$(VERSION)\"
-XS_VERSION = 0.16
+XS_VERSION = 0.17
 XS_VERSION_MACRO = XS_VERSION
 XS_DEFINE_VERSION = -D$(XS_VERSION_MACRO)=\"$(XS_VERSION)\"
 INST_ARCHLIB = blib/arch
@@ -266,7 +266,7 @@ RCS_LABEL = rcs -Nv$(VERSION_SYM): -q
 DIST_CP = best
 DIST_DEFAULT = tardist
 DISTNAME = String-CaseProfile
-DISTVNAME = String-CaseProfile-0.16
+DISTVNAME = String-CaseProfile-0.17
 
 
 # --- MakeMaker macro section:
@@ -487,7 +487,7 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) Generating META.yml
 	$(NOECHO) $(ECHO) '--- #YAML:1.0' > META_new.yml
 	$(NOECHO) $(ECHO) 'name:               String-CaseProfile' >> META_new.yml
-	$(NOECHO) $(ECHO) 'version:            0.16' >> META_new.yml
+	$(NOECHO) $(ECHO) 'version:            0.17' >> META_new.yml
 	$(NOECHO) $(ECHO) 'abstract:           Get/Set the letter case profile of a string' >> META_new.yml
 	$(NOECHO) $(ECHO) 'author:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    - Enrique Nell <perl_nell@telefonica.net>' >> META_new.yml
@@ -497,7 +497,8 @@ metafile : create_distdir
 	$(NOECHO) $(ECHO) '    ExtUtils::MakeMaker:  0' >> META_new.yml
 	$(NOECHO) $(ECHO) 'build_requires:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    ExtUtils::MakeMaker:  0' >> META_new.yml
-	$(NOECHO) $(ECHO) 'requires:  {}' >> META_new.yml
+	$(NOECHO) $(ECHO) 'requires:' >> META_new.yml
+	$(NOECHO) $(ECHO) '    Test::Warn:  0.05' >> META_new.yml
 	$(NOECHO) $(ECHO) 'no_index:' >> META_new.yml
 	$(NOECHO) $(ECHO) '    directory:' >> META_new.yml
 	$(NOECHO) $(ECHO) '        - t' >> META_new.yml
@@ -796,10 +797,11 @@ testdb_static :: testdb_dynamic
 # --- MakeMaker ppd section:
 # Creates a PPD (Perl Package Description) for a binary distribution.
 ppd :
-	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="0.16">' > $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '<SOFTPKG NAME="$(DISTNAME)" VERSION="0.17">' > $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <ABSTRACT>Get/Set the letter case profile of a string</ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Enrique Nell &lt;perl_nell@telefonica.net&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Test::Warn" VERSION="0.05" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i486-linux-gnu-thread-multi-5.10" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd

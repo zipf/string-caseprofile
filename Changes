@@ -1,5 +1,13 @@
 Revision history for String::CaseProfile
 
+0.17  February 9, 2010
+
+    * Added Test::Warn to the PREREQ_PM section in Makefile.PL.
+    * Changed the encoding of CaseProfile.pm, 03_caseprofile.t, and
+      04_caseprofile_options.t to UTF-8.
+    * Updated the documentation adding samples using the Armenian, Cyrillic and
+      Greek alphabets. Also added the corresponding test file.
+    
 0.16  February 7, 2010
 
     * Changed slightly the interface of the get_profile function to add

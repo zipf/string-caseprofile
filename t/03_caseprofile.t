@@ -6,13 +6,14 @@ use Test::More tests => 35;
 use Test::Warn;
 
 use String::CaseProfile qw(get_profile set_profile copy_profile);
-use Encode;
+#use Encode;
+use utf8;
 
 my @strings = (
-                'Entorno de tiempo de ejecución',
-                'è un linguaggio dinamico',
-                'langages dérivés du C',
-                "sil·labaris, l'altre sistema d'escriptura japonès",
+                'Entorno de tiempo de ejecuciÃ³n',
+                'Ã¨ un linguaggio dinamico',
+                'langages dÃ©rivÃ©s du C',
+                "silÂ·labaris, l'altre sistema d'escriptura japonÃ¨s",
                 'dir-se-ia que era bom',
                 'Cadena de prueba KT31',
                 'identificador some_ID',
@@ -20,9 +21,9 @@ my @strings = (
                 'vacaciones en EE.UU.'
               );
 
-# encode strings as utf-8
-my @samples = map { decode('iso-8859-1', $_) } @strings;
-
+# encode strings as utf-8 -changed the encoding of the file to utf-8; step skipped
+# my @samples = map { decode('iso-8859-1', $_) } @strings;
+my @samples = @strings;
 
 my $new_string;
 
@@ -33,12 +34,12 @@ my %profile = get_profile($samples[0]);
 is($profile{string_type}, '1st_uc', 'First letter of first word is uppercase');
 is(@{$profile{words}}, 5, 'String contains 5 words');
 is($profile{words}[2]->{word}, 'tiempo', 'Third word is tiempo');
-is($profile{words}[2]->{type}, 'all_lc', 'The type of the 2nd word is all_lc');
+is($profile{words}[2]->{type}, 'all_lc', 'The type of the 3rd word is all_lc');
 
 # Test the token recognition regex
 %profile = get_profile($samples[3]);
 is(@{$profile{words}}, 5, 'String contains 5 words');
-is($profile{words}[0]->{word}, 'sil·labaris', 'First word is sil·labaris');
+is($profile{words}[0]->{word}, 'silÂ·labaris', 'First word is silÂ·labaris');
 
 %profile = get_profile($samples[4]);
 is(@{$profile{words}}, 4, 'String contains 4 words');
@@ -58,17 +59,17 @@ my $ref_string1 = 'REFERENCE STRING';
 my $ref_string2 = 'Another reference string';
 
 $new_string = set_profile($samples[1], get_profile($ref_string1));
-is($new_string, 'È UN LINGUAGGIO DINAMICO', 'È UN LINGUAGGIO DINAMICO');
+is($new_string, 'Ãˆ UN LINGUAGGIO DINAMICO', 'Ãˆ UN LINGUAGGIO DINAMICO');
 
 $new_string = set_profile($samples[1], get_profile($ref_string2));
-is($new_string, 'È un linguaggio dinamico', 'È un linguaggio dinamico');
+is($new_string, 'Ãˆ un linguaggio dinamico', 'Ãˆ un linguaggio dinamico');
 
 # Using the copy_profile function
 $new_string = copy_profile(from => $ref_string1, to => $samples[1]);
-is($new_string, 'È UN LINGUAGGIO DINAMICO', 'È UN LINGUAGGIO DINAMICO');
+is($new_string, 'Ãˆ UN LINGUAGGIO DINAMICO', 'Ãˆ UN LINGUAGGIO DINAMICO');
 
 $new_string = copy_profile(from => $ref_string2, to => $samples[1]);
-is($new_string, 'È un linguaggio dinamico', 'È un linguaggio dinamico');
+is($new_string, 'Ãˆ un linguaggio dinamico', 'Ãˆ un linguaggio dinamico');
 
 
 # EXAMPLE 3: Change a string using several custom profiles
@@ -83,16 +84,16 @@ my %profile3 = (
 my %profile4 = ( custom => { 'all_lc' => '1st_uc' } );
 
 $new_string = set_profile($samples[2], %profile1);
-is($new_string, 'LANGAGES DÉRIVÉS DU C', 'LANGAGES DÉRIVÉS DU C');
+is($new_string, 'LANGAGES DÃ‰RIVÃ‰S DU C', 'LANGAGES DÃ‰RIVÃ‰S DU C');
     
 $new_string = set_profile($samples[2], %profile2);
-is($new_string, 'langages dérivés du c', 'langages dérivés du c');
+is($new_string, 'langages dÃ©rivÃ©s du c', 'langages dÃ©rivÃ©s du c');
     
 $new_string = set_profile($samples[2], %profile3);
-is($new_string, 'langages DÉRIVÉS du C', 'langages DÉRIVÉS du C');
+is($new_string, 'langages DÃ‰RIVÃ‰S du C', 'langages DÃ‰RIVÃ‰S du C');
 
 $new_string = set_profile($samples[2], %profile4);
-is($new_string, 'Langages Dérivés Du C', 'Langages Dérivés Du C');
+is($new_string, 'Langages DÃ©rivÃ©s Du C', 'Langages DÃ©rivÃ©s Du C');
 
 # Validation tests
 my %bad_profile1 = get_profile(1);
@@ -121,7 +122,7 @@ is($new_string, $samples[0], 'Unchanged string');
 
 # Single-letter strings
 
-my @single = qw(a Ñ 1);
+my @single = qw(a Ã‘ 1);
 my @results = qw(all_lc all_uc other);
 
 for (my $i = 0; $i<=$#single; $i++) {
